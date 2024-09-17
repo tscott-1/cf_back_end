@@ -2,14 +2,16 @@
 A repository for a django crowd funding back end in SheCodesPlus
 
 # Crowdfunding Back End
-{{ your name here }}
+Tenille Scott
 
 ## Planning:
-### Concept/Name
-{{ Include a short description of your website concept here. }}
+### Pawster
+A crowdfunding site to raise money for your animal causes
 
 ### Intended Audience/User Stories
-{{ Who are your intended audience? How will they use the website? }}
+Pet Shelters to raise money for rescues
+Community groups raising funds for animal welfare causes
+Individuals raising funds to help their pet or a community member's pet
 
 ### Front End Pages/Functionality
 - {{ A page on the front end }}

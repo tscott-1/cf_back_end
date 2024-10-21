@@ -4,9 +4,9 @@ from django.contrib.auth import get_user_model
  # Create your models here.
 class Project(models.Model):
     class ProjType(models.TextChoices):
-        INDIVIDUAL = "Individual"
-        RESCUE =  "Rescue"
-        COMMUNITY =  "Community"
+        INDIVIDUAL = "I","Individual"
+        RESCUE =  "R","Rescue"
+        COMMUNITY =  "C","Community"
     title = models.CharField(max_length=200)
     description = models.TextField()
     goal = models.IntegerField()

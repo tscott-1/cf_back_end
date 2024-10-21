@@ -3,14 +3,11 @@ from django.contrib.auth import get_user_model
 
  # Create your models here.
 class Project(models.Model):
-    INDIVIDUAL = "I"
-    RESCUE = "R"
-    COMMUNITY = "C"
-    ProjType = {
-        INDIVIDUAL: "Individual",
-        RESCUE: "Rescue",
-        COMMUNITY: "Community",
-    }
+    ProjType = [
+        ("I", "Individual"),
+        ("R", "Rescue"),
+        ("C", "Community"),
+    ]
     title = models.CharField(max_length=200)
     description = models.TextField()
     goal = models.IntegerField()

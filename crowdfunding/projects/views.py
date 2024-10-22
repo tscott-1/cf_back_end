@@ -6,8 +6,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from django.http import Http404
-from .models import Project, Pledge
-from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer, PledgeDetailSerializer
+from .models import Project, Pledge, Sportsclub, SportsList
+from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSerializer, PledgeDetailSerializer, SportsSerializer, SportDetailSerializer, ClubsSerializer, ClubDetailSerializer
 from .permissions import IsOwnerOrReadOnly, IsSuppporterOrReadOnly
 
 class ProjectList(APIView):
@@ -121,4 +121,59 @@ class PledgeDetail(APIView):
             status=status.HTTP_400_BAD_REQUEST
         )
     
+
+class SportList(APIView):
+    # permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def get(self, request):
+        sports = SportsList.objects.all()
+        serializer = SportsSerializer(sports, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = SportDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                serializer.data,
+                status=status.HTTP_201_CREATED
+            )
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
+    
+class SportDetail(APIView):
+    # permission_classes = [
+    #     permissions.IsAuthenticatedOrReadOnly,
+    #     IsSuppporterOrReadOnly
+    # ]
+
+    def get_object(self, pk):
+        try:
+            sport = SportsList.objects.get(pk=pk)
+            # self.check_object_permissions(self.request, pledge)
+            return sport
+        except sport.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk):
+        sport = self.get_object(pk)
+        serializer = SportDetailSerializer(sport)
+        return Response(serializer.data)
+    
+    def put(self, request, pk):
+        sport = self.get_object(pk)
+        serializer = SportDetailSerializer(
+            instance=sport,
+            data=request.data,
+            partial=True
+        )
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST
+        )
     

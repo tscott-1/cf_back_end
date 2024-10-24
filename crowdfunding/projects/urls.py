@@ -10,4 +10,6 @@ urlpatterns = [
   path('pledges/<int:pk>/', views.PledgeDetail.as_view()),
   path('sports/', views.SportList.as_view()),
   path('sports/<int:pk>/', views.SportDetail.as_view()),
+  path('clubs/', views.Clublist.as_view()),
+  path('clubs/<int:pk>/', views.ClubDetail.as_view()),
 ]

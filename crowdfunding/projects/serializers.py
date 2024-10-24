@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from django.apps import apps
+from users.serializers import CustomUserSerializer
 
 class PledgeSerializer(serializers.ModelSerializer):
     supporter = serializers.ReadOnlyField(source='supporter.id')
@@ -16,6 +17,7 @@ class ProjectSerializer(serializers.ModelSerializer):
 
 class ClubsSerializer(serializers.ModelSerializer):
     club_owner = serializers.ReadOnlyField(source='club_owner.id')
+    club_member = serializers.ReadOnlyField(source='club_member.id')
     class Meta:
         model = apps.get_model('projects.Sportsclub')
         fields = '__all__'
@@ -54,6 +56,7 @@ class PledgeDetailSerializer(PledgeSerializer):
         return instance
     
 class ClubDetailSerializer(ClubsSerializer):
+    club_members = CustomUserSerializer(many=True)
  
     def update(self,instance, validated_data):
         instance.club = validated_data.get('club', instance.club)
@@ -63,7 +66,7 @@ class ClubDetailSerializer(ClubsSerializer):
         instance.club_logo = validated_data.get('club_logo', instance.club_logo)
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.club_owner = validated_data.get('club_owner', instance.club_owner)
-        instance.club_members = validated_data.get('club_members', instance.club_members)
+        instance.club_members = validated_data.add('club_members', instance.club_members)
         instance.save()
         return instance
     

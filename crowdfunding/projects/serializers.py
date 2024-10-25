@@ -18,8 +18,8 @@ class ClubsSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     # TODO make enddate date_created + 30 by default
-    owner_club = serializers.ReadOnlyField(source='owner_club.id')
-    owner = ClubsSerializer(source='club_owner.id', many = False, read_only=True)
+    # owner_club = serializers.ReadOnlyField(source='owner_club')
+    # owner = ClubsSerializer(source='club_owner.id', many = False, read_only=True)
     class Meta:
         model = apps.get_model('projects.Project')
         fields = '__all__'

@@ -5,8 +5,8 @@ A repository for a django crowd funding back end in SheCodesPlus
 Tenille Scott
 
 ## Planning:
-### Pawster
-A crowdfunding site to raise money for your animal causes
+### SPPORRT
+A crowdfunding site for sports clubs to raise money for various activities or events.
 
 ### Intended Audience/User Stories
 Pet Shelters to raise money for rescues
@@ -29,9 +29,11 @@ It might look messy here in the PDF, but once it's rendered it looks very neat!
 
 It can be helpful to keep the markdown preview open in VS Code so that you can see what you're typing more easily. }}
 
-| URL | HTTP Method | Purpose | Purpose | Request Body | Success Response Code | Authentication/Authorisation |
-| --- | ----------- | ------- | ------- | ------------ | --------------------- | ---------------------------- |
-|     |             |         |         |              |                       |                              |
-
+| URL | HTTP Method | Purpose     | Request Body | Success Response Code | Authentication/Authorisation |
+| --- | ----------- | ----------- | ------------ | --------------------- | ---------------------------- |
+| https://spporrt-5d288951e37a.herokuapp.com/users/    |      GET       |      Get a list of users    |       n/a      |              200         |            none                  |
+| https://spporrt-5d288951e37a.herokuapp.com/users/    |      GET       |      Get a list of users     |      n/a      |              200         |            none                  |
+| https://spporrt-5d288951e37a.herokuapp.com/users/    |      GET       |      Get a list of users     |      n/a      |              200         |            none                  |
 ### DB Schema
-![]( {{ ./relative/path/to/your/schema/image.png }} )
+![ERD Diagram](./images/ERD.jpg )
+

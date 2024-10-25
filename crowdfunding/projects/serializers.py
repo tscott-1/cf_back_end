@@ -8,19 +8,22 @@ class PledgeSerializer(serializers.ModelSerializer):
         model = apps.get_model('projects.Pledge')
         fields = '__all__'
 
+class ClubsSerializer(serializers.ModelSerializer):
+    club_owner = serializers.ReadOnlyField(source='club_owner.id')
+    # club_members = CustomUserSerializer(many=True, read_only=True)
+    class Meta:
+        model = apps.get_model('projects.Sportsclub')
+        fields = '__all__'
+        exta_kwargs = {'club_members': {'required': False}}
 
 class ProjectSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source='owner.id')
+    # TODO make enddate date_created + 30 by default
+    owner_club = serializers.ReadOnlyField(source='owner_club.id')
+    owner = ClubsSerializer(source='club_owner.id', many = False, read_only=True)
     class Meta:
         model = apps.get_model('projects.Project')
         fields = '__all__'
 
-class ClubsSerializer(serializers.ModelSerializer):
-    club_owner = serializers.ReadOnlyField(source='club_owner.id')
-    club_member = serializers.ReadOnlyField(source='club_member.id')
-    class Meta:
-        model = apps.get_model('projects.Sportsclub')
-        fields = '__all__'
 
 class SportsSerializer(serializers.ModelSerializer):
     
@@ -31,20 +34,23 @@ class SportsSerializer(serializers.ModelSerializer):
 
 class ProjectDetailSerializer(ProjectSerializer):
     pledges = PledgeSerializer(many=True, read_only=True)
+    owner = ClubsSerializer(source='club_owner.id', many = False, read_only=True)
 
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
         instance.goal = validated_data.get('goal', instance.goal)
         instance.image = validated_data.get('image', instance.image)
+        instance.fund_type = validated_data.get('fund_type', instance.fund_type)
         instance.is_open = validated_data.get('is_open', instance.is_open)
         instance.date_created = validated_data.get('date_created', instance.date_created)
-        instance.owner = validated_data.get('owner', instance.owner)
+        instance.end_date = validated_data.get('date_created', instance.date_created)
+        instance.owner_club = validated_data.get('owner_club', instance.owner_club)
         instance.save()
         return instance
 
 class PledgeDetailSerializer(PledgeSerializer):
-    # project = ProjectDetailSerializer(many=False,read_only=True )
+    project = ProjectDetailSerializer(many=False,read_only=True )
 
     def update(self,instance, validated_data):
         instance.amount = validated_data.get('amount', instance.amount)
@@ -56,8 +62,7 @@ class PledgeDetailSerializer(PledgeSerializer):
         return instance
     
 class ClubDetailSerializer(ClubsSerializer):
-    club_members = CustomUserSerializer(many=True)
- 
+
     def update(self,instance, validated_data):
         instance.club = validated_data.get('club', instance.club)
         instance.sport = validated_data.get('sport', instance.sport)
@@ -66,8 +71,8 @@ class ClubDetailSerializer(ClubsSerializer):
         instance.club_logo = validated_data.get('club_logo', instance.club_logo)
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.club_owner = validated_data.get('club_owner', instance.club_owner)
-        instance.club_members = validated_data.add('club_members', instance.club_members)
         instance.save()
+        instance.club_members.set(validated_data.get("club_members"))
         return instance
     
     

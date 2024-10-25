@@ -34,6 +34,7 @@ class Sportsclub(models.Model):
     club_members = models.ManyToManyField(
         get_user_model(),
         related_name = "club_membership",
+        blank=True
     )
 
 
@@ -49,12 +50,12 @@ class Project(models.Model):
     description = models.TextField()
     goal = models.IntegerField()
     image = models.URLField()
-    Fund_type = models.TextField(choices=FundType)
+    fund_type = models.TextField(choices=FundType)
     is_open = models.BooleanField()
     date_created = models.DateTimeField(auto_now_add=True)
     end_date = models.DateTimeField()
     member_only = models.BooleanField()
-    owner = models.ForeignKey(
+    owner_club = models.ForeignKey(
         'Sportsclub',
         on_delete=models.CASCADE,
         related_name='owned_projects'

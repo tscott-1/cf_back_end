@@ -11,7 +11,10 @@ from .serializers import ProjectSerializer, PledgeSerializer, ProjectDetailSeria
 from .permissions import IsOwnerOrReadOnly, IsSuppporterOrReadOnly, IsClubMemberOrReadOnly, IsClubOwnerOrReadOnly
 
 class ProjectList(APIView):
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        # IsOwnerOrReadOnly
+        ]
 
     def get(self, request):
         projects = Project.objects.all()
@@ -40,8 +43,10 @@ class ProjectDetail(APIView):
     def get_object(self, pk):
         try:
             project = Project.objects.get(pk=pk)
-            self.check_object_permissions(self.request, project)
-            return project
+            club_id = project.owner_club
+            club = Sportsclub.objects.get(pk=club_id)
+            self.check_object_permissions(self.request, club)
+            return Project
         except Project.DoesNotExist:
             raise Http404
 

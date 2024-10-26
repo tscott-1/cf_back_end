@@ -37,14 +37,14 @@ class ProjectList(APIView):
 class ProjectDetail(APIView):
     permission_classes = [
         permissions.IsAuthenticatedOrReadOnly,
-        # IsOwnerOrReadOnly
+        IsOwnerOrReadOnly
     ]
 
     def get_object(self, pk):
         try:
             project = Project.objects.get(pk=pk)
-            # club_id = project.owner_club()
-            # club = Sportsclub.objects.get(pk=club_id)
+            # club_id = project.get('owner_club')
+            # owner = Project.owner_club.get('club_owner')
             self.check_object_permissions(self.request, project)
             return project
         except Project.DoesNotExist:

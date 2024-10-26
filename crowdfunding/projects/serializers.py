@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.apps import apps
 from users.serializers import CustomUserSerializer
+from users.models import CustomUser
 
 class PledgeSerializer(serializers.ModelSerializer):
     supporter = serializers.ReadOnlyField(source='supporter.id')
@@ -18,11 +19,12 @@ class ClubsSerializer(serializers.ModelSerializer):
 
 class ProjectSerializer(serializers.ModelSerializer):
     # TODO make enddate date_created + 30 by default
-    # owner_club = serializers.ReadOnlyField(source='owner_club')
-    # owner = ClubsSerializer(source='club_owner.id', many = False, read_only=True)
+    # owner_club = serializers.ReadOnlyField(source='owner_club.id')
+    pledges = PledgeSerializer(many=True, read_only=True)
+    club = ClubsSerializer(source = 'owner_club', many = False, read_only=True)
     class Meta:
         model = apps.get_model('projects.Project')
-        fields = '__all__'
+        fields = ('id', 'title', 'description', 'goal', 'image', 'fund_type', 'is_open', 'date_created', 'end_date', 'member_only', 'club', 'pledges')
 
 
 class SportsSerializer(serializers.ModelSerializer):
@@ -33,9 +35,8 @@ class SportsSerializer(serializers.ModelSerializer):
 
 
 class ProjectDetailSerializer(ProjectSerializer):
-    pledges = PledgeSerializer(many=True, read_only=True)
-    owner = ClubsSerializer(source='club_owner.id', many = False, read_only=True)
-
+    # pledges = PledgeSerializer(many=True, read_only=True)
+    
     def update(self, instance, validated_data):
         instance.title = validated_data.get('title', instance.title)
         instance.description = validated_data.get('description', instance.description)
@@ -72,7 +73,17 @@ class ClubDetailSerializer(ClubsSerializer):
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.club_owner = validated_data.get('club_owner', instance.club_owner)
         instance.save()
-        instance.club_members.set(validated_data.get("club_members"))
+        # instance.club_members.set(validated_data.get("club_members"))
+        list = instance.club_members.all()
+        new_list =[]
+        for member_id in validated_data.get("club_members", instance.club_members):
+            # member = CustomUser.objects.get(id=member_id)     
+            if member_id not in new_list:
+                new_list.append(member_id)
+        for member_id in list:
+            if member_id not in new_list:
+                new_list.append(member_id)
+        instance.club_members.set(new_list)
         return instance
     
     

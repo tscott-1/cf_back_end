@@ -64,14 +64,57 @@ https://spporrt-5d288951e37a.herokuapp.com/
 
 ### Register a new user and create a new project
 1. Go to https://spporrt-5d288951e37a.herokuapp.com/users/ and create a POST method with the following input:
+```
         {
 		"username": "xx",
 		"first_name": "xx",
 		"email": "x@xx.com",
 		"password": "xxxxxx"	
-}
-2. 
-
+        }
+```
+3. You will then need to log in with your username and password at https://spporrt-5d288951e37a.herokuapp.com/api-token-auth/  - this will provide a token which can then be used in the following steps.
+```
+        {
+                "password":"xxxxx",
+                "username": "xx"
+        }
+```
+4. If you are a new Sports club, you will need to register a new sports club by going to https://spporrt-5d288951e37a.herokuapp.com/clubs/ and creating a new sports club - the logged in user will automatically be set to be the club_owner. Input required:
+```
+        {
+                "club": "xxx",
+                "description": "xx",
+                "club_size": (this needs to be one of ("S", "< 10 Members"), ("M", "10-50 Members"),("L", "50-120 Members"), ("XL", ">120 Members"),)
+                "club_location": "xxx",
+                "is_active": "True/False",
+                "club_logo": "url to club logo",
+                "sport": 2, (selected from another table - only admin can add different sports types)
+                "club_members": [] (optional as a list - the creator will be added to this list automatically)
+        }
+```
+5. Once you have created a club, you can then create a project by going to https://spporrt-5d288951e37a.herokuapp.com/projects/ Only club_owners can create a project for their club. Input required is:
+```
+        {
+                "title": "Project Title",
+                "description": "What you want it for",
+                "goal": (integer amount)
+                "image": "URL of image",
+                "fund_type": (this needs to be wone of ("E", "Equipment and Uniforms"), ("C", "Competitions and Events"), ("F", "Players Fees"), ("S", "Coaching"), ("I", "Club Infrastructure"))
+                "is_open": "True/False",
+                "end_date": "xxx",
+                "member_only": "True/False", (this field will allow you to only allow club members to pledge to the project if true - future functionality)
+                "owner_club": your club id
+        }
+```
+6. When your project is set up, you can send out this link to your supporters - https://spporrt-5d288951e37a.herokuapp.com/pledges/ and ask them to pledge with the following input:
+```
+        {
+                "amount": integer amount,
+                "comment": "xxx",
+                "anonymous": "True/False",
+                "project": your project id
+        }
+```
 
 ### API Spec
 

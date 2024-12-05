@@ -3,28 +3,14 @@ from django.apps import apps
 from users.serializers import CustomUserSerializer
 from users.models import CustomUser
 
+
 class PledgeSerializer(serializers.ModelSerializer):
     supporter = serializers.ReadOnlyField(source='supporter.id')
     class Meta:
         model = apps.get_model('projects.Pledge')
         fields = '__all__'
 
-class ClubsSerializer(serializers.ModelSerializer):
-    club_owner = serializers.ReadOnlyField(source='club_owner.id')
-    # club_members = CustomUserSerializer(many=True, read_only=True)
-    class Meta:
-        model = apps.get_model('projects.Sportsclub')
-        fields = '__all__'
-        exta_kwargs = {'club_members': {'required': False}}
 
-class ProjectSerializer(serializers.ModelSerializer):
-    # TODO make enddate date_created + 30 by default
-    # owner_club = serializers.ReadOnlyField(source='owner_club.id')
-    pledges = PledgeSerializer(many=True, read_only=True)
-    club = ClubsSerializer(source = 'owner_club', many = False, read_only=True)
-    class Meta:
-        model = apps.get_model('projects.Project')
-        fields = ('id', 'title', 'description', 'goal', 'image', 'fund_type', 'is_open', 'date_created', 'end_date', 'member_only', 'club', 'pledges')
 
 
 class SportsSerializer(serializers.ModelSerializer):
@@ -32,6 +18,25 @@ class SportsSerializer(serializers.ModelSerializer):
     class Meta:
         model = apps.get_model('projects.SportsList')
         fields = '__all__'
+
+
+class ClubsSerializer(serializers.ModelSerializer):
+    owner = CustomUserSerializer(source = 'club_owner', many = False, read_only=True)
+    members = CustomUserSerializer(source = 'club_members', many=True, read_only=True)
+    sportdetails = SportsSerializer(source = 'sport', many=False, read_only=True)
+    class Meta:
+        model = apps.get_model('projects.Sportsclub')
+        fields = ('id', 'club_owner', 'owner', 'club', 'description', 'club_size', 'club_location', 'is_active', 'club_logo', 'sport','sportdetails', 'club_members', 'members')
+        exta_kwargs = {'club_members': {'required': False}}
+
+class ProjectSerializer(serializers.ModelSerializer):
+    # TODO make enddate date_created + 30 by default
+    pledges = PledgeSerializer(many=True, read_only=True)
+    club = ClubsSerializer(source = 'owner_club', many = False, read_only=True)
+    class Meta:
+        model = apps.get_model('projects.Project')
+        fields = ('id', 'title', 'description', 'goal', 'image', 'fund_type', 'is_open', 'date_created', 'end_date', 'member_only', 'club','owner_club', 'pledges')
+
 
 
 class ProjectDetailSerializer(ProjectSerializer):

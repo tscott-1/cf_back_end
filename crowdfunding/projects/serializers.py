@@ -5,7 +5,8 @@ from users.models import CustomUser
 
 
 class PledgeSerializer(serializers.ModelSerializer):
-    supporter = serializers.ReadOnlyField(source='supporter.id')
+
+    supporter = CustomUserSerializer(many = False, read_only=True)
     class Meta:
         model = apps.get_model('projects.Pledge')
         fields = '__all__'
@@ -21,12 +22,12 @@ class SportsSerializer(serializers.ModelSerializer):
 
 
 class ClubsSerializer(serializers.ModelSerializer):
-    owner = CustomUserSerializer(source = 'club_owner', many = False, read_only=True)
+    club_owner = CustomUserSerializer(many = False, read_only=True)
     members = CustomUserSerializer(source = 'club_members', many=True, read_only=True)
     sportdetails = SportsSerializer(source = 'sport', many=False, read_only=True)
     class Meta:
         model = apps.get_model('projects.Sportsclub')
-        fields = ('id', 'club_owner', 'owner', 'club', 'description', 'club_size', 'club_location', 'is_active', 'club_logo', 'sport','sportdetails', 'club_members', 'members')
+        fields = ('id', 'club_owner', 'club', 'description', 'club_size', 'club_location', 'is_active', 'club_logo', 'sport','sportdetails', 'club_members', 'members')
         exta_kwargs = {'club_members': {'required': False}}
 
 class ProjectSerializer(serializers.ModelSerializer):
@@ -57,7 +58,7 @@ class ProjectDetailSerializer(ProjectSerializer):
 
 class PledgeDetailSerializer(PledgeSerializer):
     project = ProjectDetailSerializer(many=False,read_only=True )
-
+    
     def update(self,instance, validated_data):
         instance.amount = validated_data.get('amount', instance.amount)
         instance.comment = validated_data.get('comment', instance.comment)

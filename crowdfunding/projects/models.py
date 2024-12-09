@@ -25,7 +25,7 @@ class Sportsclub(models.Model):
     club_size = models.TextField(choices=size)
     club_location = models.TextField()
     is_active = models.BooleanField()
-    club_logo = models.URLField()
+    club_logo = models.URLField(max_length=2000)
     club_owner = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,
@@ -49,7 +49,7 @@ class Project(models.Model):
     title = models.CharField(max_length=200)
     description = models.TextField()
     goal = models.IntegerField()
-    image = models.URLField()
+    image = models.URLField(max_length=2000)
     fund_type = models.TextField(choices=FundType)
     is_open = models.BooleanField()
     date_created = models.DateTimeField(auto_now_add=True)

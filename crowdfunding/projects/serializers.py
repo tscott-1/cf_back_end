@@ -80,16 +80,11 @@ class ClubDetailSerializer(ClubsSerializer):
         instance.club_owner = validated_data.get('club_owner', instance.club_owner)
         instance.save()
         # instance.club_members.set(validated_data.get("club_members"))
-        list = instance.club_members.all()
-        new_list =[]
-        for member_id in validated_data.get("club_members", instance.club_members):
-            # member = CustomUser.objects.get(id=member_id)     
-            if member_id not in new_list:
-                new_list.append(member_id)
-        for member_id in list:
-            if member_id not in new_list:
-                new_list.append(member_id)
-        instance.club_members.set(new_list)
+        club_members = validated_data.get('club_members', None)
+        if club_members is not None:
+            # Clear existing members and set new members
+            instance.club_members.clear()
+            instance.club_members.add(*club_members)
         return instance
     
     

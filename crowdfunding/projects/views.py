@@ -70,6 +70,13 @@ class ProjectDetail(APIView):
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
         )
+    
+    def delete(self, request, pk):
+        project = self.get_object(pk)
+        project.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
+        )
 
 
 class PledgeList(APIView):
@@ -125,6 +132,13 @@ class PledgeDetail(APIView):
         return Response(
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    def delete(self, request, pk):
+        pledge = self.get_object(pk)
+        pledge.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
         )
     
 
@@ -236,5 +250,12 @@ class ClubDetail(APIView):
         return Response(
             serializer.errors,
             status=status.HTTP_400_BAD_REQUEST
+        )
+    
+    def delete(self, request, pk):
+        club = self.get_object(pk)
+        club.delete()
+        return Response(
+            status=status.HTTP_204_NO_CONTENT
         )
     

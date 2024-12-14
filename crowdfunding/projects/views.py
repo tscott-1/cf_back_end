@@ -75,6 +75,7 @@ class ProjectDetail(APIView):
         project = self.get_object(pk)
         project.delete()
         return Response(
+            {"detail": "PRoject successfully deleted"},
             status=status.HTTP_204_NO_CONTENT
         )
 
@@ -138,6 +139,7 @@ class PledgeDetail(APIView):
         pledge = self.get_object(pk)
         pledge.delete()
         return Response(
+             {"detail": "Pledge successfully deleted"},
             status=status.HTTP_204_NO_CONTENT
         )
     
@@ -256,6 +258,7 @@ class ClubDetail(APIView):
         club = self.get_object(pk)
         club.delete()
         return Response(
+            {"detail": "Club successfully deleted"},
             status=status.HTTP_204_NO_CONTENT
         )
     
